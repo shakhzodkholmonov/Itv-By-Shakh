@@ -3,7 +3,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import FilmCard from "../../component/filmCard";
-import Carusel from "../../component/Layout/Carusel";
 import Footer from "../../component/Layout/Footer";
 import SearchAppBar from "../../component/Layout/Headerr";
 import GetFilms from "../../hooks/getFilms";
@@ -57,7 +56,9 @@ const FilmPage = () => {
   return (
     <>
       <SearchAppBar />
-      <Carusel />
+      <Box>
+        <img src="https://files.itv.uz/uploads/helper/2022/03/02/1x/desktop.jpg" alt="" />
+      </Box>
       <Container
         maxWidth="xl"
         sx={{
