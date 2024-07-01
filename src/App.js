@@ -119,7 +119,7 @@ function Home() {
         <Box mb={4} sx={{ flexGrow: 1 }}>
           {slicedGoods.map((good) => (
             <Box key={good.id} p={2}>
-              <ProductCard good={good} />
+              <FilmCard good={good} />
             </Box>
           ))}
         </Box>
@@ -142,7 +142,7 @@ function Home() {
         {showMore &&
           additionalSections.map((item, i) => (
             <Box mb={4} key={i}>
-              <Typography fontSize={"35px"} color={"white"} variant="h5" gutterBottom>
+              <Typography fontWeight="bold" fontSize={"35px"} color={"white"} variant="h5" gutterBottom>
                 {item.type}
                 <ArrowForwardIosIcon sx={{ marginLeft: "6px", fontSize: "medium" }} />
               </Typography>

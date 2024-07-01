@@ -11,7 +11,7 @@ function Movies() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [visibleMovies, setVisibleMovies] = useState(15);
+  const [visibleMovies, setVisibleMovies] = useState(10);
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -33,7 +33,7 @@ function Movies() {
   }, []);
 
   const loadMoreMovies = () => {
-    setVisibleMovies((prevVisibleMovies) => prevVisibleMovies + 15);
+    setVisibleMovies((prevVisibleMovies) => prevVisibleMovies + 10);
   };
 
   if (loading) {
@@ -224,7 +224,6 @@ function Movies() {
                     height: "50px",
                     width: "100%",
                     border: "none",
-
                     "&:hover": {
                       backgroundColor: "rgb(40, 68, 35)",
                     },

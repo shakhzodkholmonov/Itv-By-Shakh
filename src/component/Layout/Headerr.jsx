@@ -1,8 +1,15 @@
-import { AppBar, Box, Link, Typography } from "@mui/material";
+import { AppBar, Box, Button, CircularProgress, Link, Modal, TextField, Typography } from "@mui/material";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
+import FilmCard from "../filmCard";
 
 export default function SearchAppBar() {
   const [scroll, setScroll] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,6 +21,18 @@ export default function SearchAppBar() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  const handleSearch = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(`http://localhost:3001/films?search=${query}`);
+      setResults(response.data);
+    } catch (error) {
+      setError("Failed to fetch results");
+    }
+    setLoading(false);
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -35,7 +54,6 @@ export default function SearchAppBar() {
               <Typography
                 sx={{
                   color: "white",
-
                   "&:hover": {
                     backgroundColor: "transparent",
                   },
@@ -96,7 +114,6 @@ export default function SearchAppBar() {
                 Multfilmlar
               </Typography>
             </Link>
-
             <Link href="/subscribtions" style={{ textDecoration: "none" }}>
               <Typography
                 sx={{
@@ -175,11 +192,12 @@ export default function SearchAppBar() {
                 borderRadius: "10px",
                 color: "white",
                 marginLeft: "5px",
-                cursor: "default",
+                cursor: "pointer",
                 ":hover": {
                   backgroundColor: "rgba(203, 203, 203, 0.100)",
                 },
               }}
+              onClick={() => setOpen(true)}
             >
               <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -224,20 +242,58 @@ export default function SearchAppBar() {
             </button>
           </Box>
         </Box>
-
-        {/* <Link to="/favorites" style={{ textDecoration: "none" }}>
-          <NavBarButton>
-            <FavoriteBorderOutlinedIcon />
-            <ButtonText variant="body1">Saralangan</ButtonText>
-          </NavBarButton>
-        </Link>
-        <Link to="/bag" style={{ textDecoration: "none" }}>
-          <NavBarButton>
-            <ShoppingCartOutlinedIcon />
-            <ButtonText variant="body1">Savat</ButtonText>
-          </NavBarButton>
-        </Link> */}
       </AppBar>
+      <Modal open={open} onClose={() => setOpen(false)} sx={{ display: "flex", justifyContent: "center" }}>
+        <Box
+          sx={{
+            bgcolor: "#1D1F1E",
+            padding: "20px",
+            borderRadius: "10px",
+            width: "80%",
+            maxHeight: "80%",
+            overflowY: "auto",
+          }}
+        >
+          <Typography color={"white"} variant="h6" mb={2}>
+            Filmlar va serillarni izlash
+          </Typography>
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Search..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
+          />
+          <Button variant="contained" sx={{ mt: 2 }} onClick={handleSearch} disabled={loading}>
+            {loading ? <CircularProgress size={24} /> : "Search"}
+          </Button>
+          {error && (
+            <Typography color="error" mt={2}>
+              {error}
+            </Typography>
+          )}
+          <Box
+            mt={2}
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "16px",
+              justifyContent: "center",
+            }}
+          >
+            {results.slice(0, 5).map((good) => (
+              <Box key={good.id} mb={2} p={2}>
+                <FilmCard good={good} />
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      </Modal>
     </Box>
   );
 }
